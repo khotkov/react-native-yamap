@@ -73,10 +73,6 @@
     return icon;
 }
 
--(void)onReceiveNativeEvent:(NSDictionary *)response {
-    if (self.onRouteFound) self.onRouteFound(response);
-}
-
 -(void) removeAllSections {
     [self.mapWindow.map.mapObjects clear];
 }

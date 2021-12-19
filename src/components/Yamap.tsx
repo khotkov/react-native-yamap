@@ -185,7 +185,6 @@ export class YaMap extends React.Component<YaMapProps> {
   private getProps() {
     const props = {
       ...this.props,
-      onRouteFound: this.processRoute,
       onCameraPositionReceived: this.processCameraPosition,
       onVisibleRegionReceived: this.processVisibleRegion,
       userLocationIcon: this.props.userLocationIcon ? this.resolveImageUri(this.props.userLocationIcon) : undefined,
