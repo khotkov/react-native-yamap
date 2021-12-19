@@ -20,7 +20,6 @@ import com.yandex.mapkit.RequestPointType;
 import com.yandex.mapkit.directions.DirectionsFactory;
 import com.yandex.mapkit.directions.driving.DrivingOptions;
 import com.yandex.mapkit.directions.driving.DrivingRoute;
-import com.yandex.mapkit.directions.driving.DrivingRouter;
 import com.yandex.mapkit.directions.driving.DrivingSection;
 import com.yandex.mapkit.directions.driving.DrivingSession;
 import com.yandex.mapkit.directions.driving.VehicleOptions;
@@ -40,9 +39,6 @@ import com.yandex.mapkit.map.PolylineMapObject;
 import com.yandex.mapkit.map.VisibleRegion;
 import com.yandex.mapkit.mapview.MapView;
 import com.yandex.mapkit.transport.TransportFactory;
-import com.yandex.mapkit.transport.masstransit.MasstransitOptions;
-import com.yandex.mapkit.transport.masstransit.MasstransitRouter;
-import com.yandex.mapkit.transport.masstransit.PedestrianRouter;
 import com.yandex.mapkit.transport.masstransit.Route;
 import com.yandex.mapkit.transport.masstransit.RouteStop;
 import com.yandex.mapkit.transport.masstransit.Section;
@@ -89,9 +85,6 @@ public class YamapView extends MapView implements UserLocationObjectListener, Ca
     private Bitmap userLocationBitmap = null;
 
     private RouteManager routeMng = new RouteManager();
-    private MasstransitRouter masstransitRouter = TransportFactory.getInstance().createMasstransitRouter();
-    private DrivingRouter drivingRouter;
-    private PedestrianRouter pedestrianRouter = TransportFactory.getInstance().createPedestrianRouter();
     private UserLocationLayer userLocationLayer = null;
     private int userLocationAccuracyFillColor = 0;
     private int userLocationAccuracyStrokeColor = 0;
@@ -105,7 +98,6 @@ public class YamapView extends MapView implements UserLocationObjectListener, Ca
     public YamapView(Context context) {
         super(context);
         DirectionsFactory.initialize(context);
-        drivingRouter = DirectionsFactory.getInstance().createDrivingRouter();
         getMap().addCameraListener(this);
         getMap().addInputListener(this);
     }
@@ -216,7 +208,6 @@ public class YamapView extends MapView implements UserLocationObjectListener, Ca
                 RequestPoint _p = new RequestPoint(point, RequestPointType.WAYPOINT, null);
                 _points.add(_p);
             }
-            drivingRouter.requestRoutes(_points, new DrivingOptions(), new VehicleOptions(), listener);
             return;
         }
         ArrayList<RequestPoint> _points = new ArrayList<>();
@@ -251,12 +242,6 @@ public class YamapView extends MapView implements UserLocationObjectListener, Ca
                 self.onRoutesFound(id, Arguments.createArray(), "error");
             }
         };
-        if (vehicles.size() == 0) {
-            pedestrianRouter.requestRoutes(_points, new TimeOptions(), listener);
-            return;
-        }
-        MasstransitOptions masstransitOptions = new MasstransitOptions(new ArrayList<String>(), vehicles, new TimeOptions());
-        masstransitRouter.requestRoutes(_points, masstransitOptions, listener);
     }
 
     public void fitAllMarkers() {
